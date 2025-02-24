@@ -1,8 +1,7 @@
-//
-//  User.swift
-//  Foundly
-//
-//  Created by mars uzhanov on 19.02.2025.
-//
-
 import Foundation
+
+struct User {
+    let username: String
+    let email: String
+    let userUID: String
+}

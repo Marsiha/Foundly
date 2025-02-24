@@ -25,8 +25,16 @@ class Validator {
     
     static func isPasswordValid(for password: String) -> Bool {
         let password = password.trimmingCharacters(in: .whitespacesAndNewlines)
-        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%*?&]).{6,32}$"
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%*?&\\-_]).{6,32}$"
         let passwordPred = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
         return passwordPred.evaluate(with: password)
     }
+    
+    static func isValidCode(for code: String) -> Bool {
+        let code = code.trimmingCharacters(in: .whitespacesAndNewlines)
+        let codeRegEx = "^[0-9]{6}$"
+        let codePred = NSPredicate(format: "SELF MATCHES %@", codeRegEx)
+        return codePred.evaluate(with: code)
+    }
+
 }

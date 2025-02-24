@@ -13,12 +13,13 @@ class RegisterViewController: UIViewController {
     private let subView = UIView()
     private let headerView = AuthHeaderView(title: "Регистрация", subTitle: "Заполните данные для завершения регистрации")
     
-    private let usernameField = CustomTextField(fieldType: .username)
     private let emailField = CustomTextField(fieldType: .email)
+    private let nameField = CustomTextField(fieldType: .name)
+    private let lastNameField = CustomTextField(fieldType: .lastName)
     private let passwordField = CustomTextField(fieldType: .password)
     private let repeatPasswordField = CustomTextField(fieldType: .repeatPassword)
     
-    private let signUpButton = CustomButton(title: "Зарегистрироваться", hasBackground: true, fontSize: .big)
+    private let signUpButton = CustomButton(title: "Продолжить", hasBackground: true, fontSize: .big)
     private let signInButton = CustomButton(title: "Already have an account? Sign In.", fontSize: .med)
     
     private let termsTextView: UITextView = {
@@ -54,14 +55,15 @@ class RegisterViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.view.backgroundColor = .systemBackground
-        self.subView.backgroundColor = .systemBackground
+        self.view.backgroundColor = .foundlyPolar
+        self.subView.backgroundColor = .foundlyPolar
         
         // Add subviews
         self.view.addSubview(subView)
         self.subView.addSubview(headerView)
-        self.subView.addSubview(usernameField)
         self.subView.addSubview(emailField)
+        self.subView.addSubview(nameField)
+        self.subView.addSubview(lastNameField)
         self.subView.addSubview(passwordField)
         self.subView.addSubview(repeatPasswordField)
         self.subView.addSubview(signUpButton)
@@ -70,33 +72,41 @@ class RegisterViewController: UIViewController {
         
         // Set up constraints using SnapKit
         subView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
+            make.top.equalToSuperview().offset(view.bounds.height * 0.15)
+            make.bottom.equalTo(self.view.layoutMarginsGuide.snp.bottom)
             make.width.equalToSuperview().multipliedBy(0.85)
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
         
         headerView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
+            make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(222)
+            make.height.equalTo(120)
         }
         
-        usernameField.snp.makeConstraints { make in
-            make.top.equalTo(headerView.snp.bottom).offset(12)
+        emailField.snp.makeConstraints { make in
+            make.top.equalTo(headerView.snp.bottom).offset(22)
             make.centerX.equalToSuperview()
             make.height.equalTo(55)
             make.width.equalToSuperview()
         }
         
-        emailField.snp.makeConstraints { make in
-            make.top.equalTo(usernameField.snp.bottom).offset(22)
+        nameField.snp.makeConstraints { make in
+            make.top.equalTo(emailField.snp.bottom).offset(22)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(55)
+            make.width.equalToSuperview()
+        }
+        
+        lastNameField.snp.makeConstraints { make in
+            make.top.equalTo(nameField.snp.bottom).offset(22)
             make.centerX.equalToSuperview()
             make.height.equalTo(55)
             make.width.equalToSuperview()
         }
         
         passwordField.snp.makeConstraints { make in
-            make.top.equalTo(emailField.snp.bottom).offset(22)
+            make.top.equalTo(lastNameField.snp.bottom).offset(22)
             make.centerX.equalToSuperview()
             make.height.equalTo(55)
             make.width.equalToSuperview()
@@ -123,7 +133,7 @@ class RegisterViewController: UIViewController {
         }
         
         signInButton.snp.makeConstraints { make in
-            make.top.equalTo(termsTextView.snp.bottom).offset(11)
+            make.top.equalTo(termsTextView.snp.bottom).offset(-11)
             make.centerX.equalToSuperview()
             make.height.equalTo(44)
             make.width.equalToSuperview()
@@ -132,46 +142,46 @@ class RegisterViewController: UIViewController {
     
     // MARK: - Selectors
     @objc func didTapSignUp() {
-//        let registerUserRequest = RegiserUserRequest(
-//            username: self.usernameField.text ?? "",
-//            email: self.emailField.text ?? "",
-//            password: self.passwordField.text ?? ""
-//        )
-//        
-//        // Username check
-//        if !Validator.isValidUsername(for: registerUserRequest.username) {
-//            AlertManager.showInvalidUsernameAlert(on: self)
-//            return
-//        }
-//        
-//        // Email check
-//        if !Validator.isValidEmail(for: registerUserRequest.email) {
-//            AlertManager.showInvalidEmailAlert(on: self)
-//            return
-//        }
-//        
-//        // Password check
-//        if !Validator.isPasswordValid(for: registerUserRequest.password) {
-//            AlertManager.showInvalidPasswordAlert(on: self)
-//            return
-//        }
-//        
-//        AuthService.shared.registerUser(with: registerUserRequest) { [weak self] wasRegistered, error in
-//            guard let self = self else { return }
-//            
-//            if let error = error {
-//                AlertManager.showRegistrationErrorAlert(on: self, with: error)
-//                return
-//            }
-//            
-//            if wasRegistered {
-//                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-//                    sceneDelegate.checkAuthentication()
-//                }
-//            } else {
-//                AlertManager.showRegistrationErrorAlert(on: self)
-//            }
-//        }
+        let registerUserRequest = RegisterUserRequest(
+            email: self.emailField.text ?? "",
+            firstName: self.nameField.text ?? "",
+            lastName: self.lastNameField.text ?? "",
+            password: self.passwordField.text ?? "",
+            password2: self.repeatPasswordField.text ?? ""
+        )
+        
+        // Email check
+        if !Validator.isValidEmail(for: registerUserRequest.email) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
+        
+        // Password check
+        if !Validator.isPasswordValid(for: registerUserRequest.password) {
+            AlertManager.showInvalidPasswordAlert(on: self)
+            return
+        }
+        
+        AuthService.shared.registerUser(with: registerUserRequest) { [weak self] wasRegistered, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                AlertManager.showRegistrationErrorAlert(on: self, with: error)
+                return
+            }
+            
+            if wasRegistered {
+                DispatchQueue.main.async {
+                       let vc = RegisterCodeViewController()
+                       vc.registerUserRequest = registerUserRequest.email
+                       self.navigationController?.pushViewController(vc, animated: true)
+                   }
+            } else {
+                DispatchQueue.main.async {
+                        AlertManager.showRegistrationErrorAlert(on: self)
+                    }
+            }
+        }
     }
     
     @objc private func didTapSignIn() {

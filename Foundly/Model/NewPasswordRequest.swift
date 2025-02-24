@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct NewPasswordRequest {
+    let email: String
+    let password: String
+}

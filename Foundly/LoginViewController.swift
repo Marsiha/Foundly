@@ -12,20 +12,19 @@ class LoginViewController: UIViewController {
     
     // MARK: - UI Components
     private let subView = UIView()
-    private let headerView = AuthHeaderView(title: "Sign In", subTitle: "Sign in to your account")
+    private let headerView = AuthHeaderView(title: "Войти", subTitle: "Введите email и пароль для входа")
     
     private let emailField = CustomTextField(fieldType: .email)
     private let passwordField = CustomTextField(fieldType: .password)
     
-    private let signInButton = CustomButton(title: "Sign In", hasBackground: true, fontSize: .big)
-    private let newUserButton = CustomButton(title: "New User? Create Account.", fontSize: .med)
-    private let forgotPasswordButton = CustomButton(title: "Forgot Password?", fontSize: .small)
+    private let signInButton = CustomButton(title: "Войти", hasBackground: true, fontSize: .big)
+    private let newUserButton = CustomButton(title: "Нет аккаунта? Зарегистрируйтесь", fontSize: .small)
+    private let forgotPasswordButton = CustomButton(title: "Забыли пароль? ", fontSize: .small)
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupUI()
-        
         self.signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         self.newUserButton.addTarget(self, action: #selector(didTapNewUser), for: .touchUpInside)
         self.forgotPasswordButton.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
@@ -34,12 +33,13 @@ class LoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.view.backgroundColor = .systemBackground
-        self.subView.backgroundColor = .systemBackground
+        self.view.backgroundColor = .foundlyPolar
+        self.subView.backgroundColor = .foundlyPolar
         
         self.view.addSubview(subView)
         self.subView.addSubview(headerView)
@@ -50,15 +50,16 @@ class LoginViewController: UIViewController {
         self.subView.addSubview(forgotPasswordButton)
         
         subView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
+            make.top.equalToSuperview().offset(view.bounds.height * 0.20)
+            make.bottom.equalTo(self.view.layoutMarginsGuide.snp.bottom)
             make.width.equalToSuperview().multipliedBy(0.85)
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
         
         headerView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
+            make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(222)
+            make.height.equalTo(100)
         }
         
         emailField.snp.makeConstraints { make in
@@ -100,7 +101,44 @@ class LoginViewController: UIViewController {
     
     // MARK: - Selectors
     @objc private func didTapSignIn() {
+        
+        let loginRequest = LoginUserRequest(
+            username: self.emailField.text ?? "",
+            password: self.passwordField.text ?? ""
+        )
+        
+        // Username check
+        if !Validator.isValidEmail(for: loginRequest.username) {
+            AlertManager.showInvalidEmailAlert(on: self)
+            return
+        }
+        
+        // Password check
+        if !Validator.isPasswordValid(for: loginRequest.password) {
+            AlertManager.showInvalidPasswordAlert(on: self)
+            return
+        }
+        
+        // Call the login function
+        AuthService.shared.signIn(with: loginRequest) { error in
+            if let error = error {
+                AlertManager.showSignInErrorAlert(on: self, with: error)
+                return
+            } else {
+                DispatchQueue.main.async {
+                    let vc = MapViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
     }
+    
+      // MARK: - Helper Functions
+      private func showAlert(title: String, message: String) {
+          let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+          alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+          self.present(alert, animated: true, completion: nil)
+      }
     
     @objc private func didTapNewUser() {
         let vc = RegisterViewController()
@@ -108,5 +146,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func didTapForgotPassword() {
+        let vc = ForgotPasswordViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

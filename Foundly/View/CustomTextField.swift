@@ -12,8 +12,11 @@ class CustomTextField: UITextField {
     enum CustomTextFieldType {
         case username
         case email
+        case name
+        case lastName
         case password
         case repeatPassword
+        case code
     }
     
     private let authFieldType: CustomTextFieldType
@@ -22,7 +25,7 @@ class CustomTextField: UITextField {
         self.authFieldType = fieldType
         super.init(frame: .zero)
         
-        self.backgroundColor = .secondarySystemBackground
+        self.backgroundColor = .foundlySwan
         self.layer.cornerRadius = 10
         
         self.returnKeyType = .done
@@ -44,11 +47,21 @@ class CustomTextField: UITextField {
             self.placeholder = "Пароль"
             self.textContentType = .oneTimeCode
             self.isSecureTextEntry = true
+
         case .repeatPassword:
             self.placeholder = "Подтвердить пароль"
             self.textContentType = .oneTimeCode
             self.isSecureTextEntry = true
+            
+        case .code:
+            self.placeholder = "Введите код"
+            
+        case .name:
+            self.placeholder = "Имя"
+        case .lastName:
+            self.placeholder = "Фамилия"
         }
+        
     }
     
     required init?(coder: NSCoder) {

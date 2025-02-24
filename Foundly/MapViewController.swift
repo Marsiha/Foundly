@@ -9,7 +9,6 @@ class MapViewController: UIViewController {
     private lazy var searchTextView: UISearchTextField = {
         let search = UISearchTextField()
         search.placeholder = "Search"
-        
         return search
     }()
     
@@ -29,17 +28,6 @@ class MapViewController: UIViewController {
         setupUI()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 private extension MapViewController {
@@ -61,7 +49,6 @@ private extension MapViewController {
             make.trailing.equalToSuperview()
         }
     }
-    
 }
 
 extension MapViewController: CLLocationManagerDelegate {
