@@ -1,10 +1,3 @@
-//
-//  AlertManager.swift
-//  swift-login-system-tutorial
-//
-//  Created by YouTube on 2022-11-01.
-//
-
 import UIKit
 
 class AlertManager {
@@ -31,6 +24,10 @@ extension AlertManager {
     
     public static func showInvalidUsernameAlert(on vc: UIViewController) {
         self.showBasicAlert(on: vc, title: "Invalid Username", message: "Please enter a valid username.")
+    }
+    
+    public static func showInvalidCodeAlert(on vc: UIViewController) {
+        self.showBasicAlert(on: vc, title: "Invalid Code", message: "Please enter a valid code.")
     }
 }
 

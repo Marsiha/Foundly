@@ -104,6 +104,7 @@
 		F6AE37F12D62511900D51368 /* Foundly */ = {
 			isa = PBXGroup;
 			children = (
+				F653C7022D64B37500F00C77 /* Model */,
 				F653C6F52D63B88900F00C77 /* View */,
 				F6AE37EA2D62511900D51368 /* AppDelegate.swift */,
 				F6AE37EB2D62511900D51368 /* Assets.xcassets */,
@@ -113,8 +114,19 @@
 				F653C6FE2D63B99500F00C77 /* AlertManager.swift */,
 				F6AE37F02D62511900D51368 /* MapViewController.swift */,
 				F653C6F32D634E5B00F00C77 /* LoginViewController.swift */,
-				F653C6FC2D63B93C00F00C77 /* RegisterViewController.swift */,
 				F653C7002D63B9CB00F00C77 /* Validator.swift */,
+				F653C7052D65EE9900F00C77 /* ProfileViewController.swift */,
+				F653C7072D65EEFE00F00C77 /* HistoryViewController.swift */,
+				F653C7092D65EF0400F00C77 /* ChatViewController.swift */,
+				F653C70B2D65EF1300F00C77 /* PostViewController.swift */,
+				F653C70D2D65F0FA00F00C77 /* AuthService.swift */,
+				F68F37BF2D665B240024624B /* Colors.swift */,
+				F68F37C12D6688F70024624B /* RegisterEmailViewController.swift */,
+				F68F37C32D6689020024624B /* RegisterCodeViewController.swift */,
+				F653C6FC2D63B93C00F00C77 /* RegisterViewController.swift */,
+				F68F37C92D66BE2D0024624B /* ForgotPasswordViewController.swift */,
+				F68F37CB2D6726F50024624B /* ResetCodeViewController.swift */,
+				F68F37CD2D6728680024624B /* NewPasswordViewController.swift */,
 			);
 			path = Foundly;
 			sourceTree = "<group>";
@@ -219,15 +231,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				F653C6FB2D63B90D00F00C77 /* CustomTextField.swift in Sources */,
+				F68F37CA2D66BE2D0024624B /* ForgotPasswordViewController.swift in Sources */,
 				F653C6F42D634E5B00F00C77 /* LoginViewController.swift in Sources */,
 				F653C7012D63B9CB00F00C77 /* Validator.swift in Sources */,
 				F6AE37F52D62511A00D51368 /* AppDelegate.swift in Sources */,
+				F653C7082D65EEFE00F00C77 /* HistoryViewController.swift in Sources */,
 				F653C6FD2D63B93C00F00C77 /* RegisterViewController.swift in Sources */,
 				F653C6F92D63B8E900F00C77 /* CustomButton.swift in Sources */,
+				F68F37BC2D65F35A0024624B /* User.swift in Sources */,
+				F653C7062D65EE9900F00C77 /* ProfileViewController.swift in Sources */,
 				F6AE37F62D62511A00D51368 /* SceneDelegate.swift in Sources */,
+				F653C70C2D65EF1300F00C77 /* PostViewController.swift in Sources */,
 				F653C6F72D63B8AC00F00C77 /* AuthHeaderView.swift in Sources */,
+				F68F37C02D665B240024624B /* Colors.swift in Sources */,
+				F68F37C42D6689020024624B /* RegisterCodeViewController.swift in Sources */,
+				F653C70A2D65EF0400F00C77 /* ChatViewController.swift in Sources */,
 				F6AE37F72D62511A00D51368 /* MapViewController.swift in Sources */,
 				F653C6FF2D63B99500F00C77 /* AlertManager.swift in Sources */,
+				F68F37C22D6688F70024624B /* RegisterEmailViewController.swift in Sources */,
+				F68F37BE2D65F3920024624B /* RegisterUserRequest.swift in Sources */,
+				F68F37C62D66A54A0024624B /* VerifyRegisterCodeRequest.swift in Sources */,
+				F68F37CC2D6726F50024624B /* ResetCodeViewController.swift in Sources */,
+				F653C7042D64B37F00F00C77 /* LoginRequest.swift in Sources */,
+				F68F37D02D6729A90024624B /* NewPasswordRequest.swift in Sources */,
+				F68F37CE2D6728680024624B /* NewPasswordViewController.swift in Sources */,
+				F653C70E2D65F0FB00F00C77 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
