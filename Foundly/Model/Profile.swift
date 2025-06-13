@@ -1,29 +1,27 @@
+//
+//  Profile.swift
+//  Foundly
+//
+//  Created by mars uzhanov on 28.03.2025.
+//
+
 import Foundation
 
-struct User: Codable {
+struct ProfileEdit: Codable {
     
     let username: String
-    let email: String
     let firstName: String
     let lastName: String
     let phoneNumber: String
-    let profilePicture: String?
-    let qrCode: String?
-    let birthday: String?
     
     
     enum CodingKeys: String, CodingKey {
         
         case username
-        case email
         case firstName = "first_name"
         case lastName = "last_name"
         case phoneNumber = "phone_number"
-        case birthday
-        case profilePicture = "profile_picture"
-        case qrCode = "qr_code"
         
     }
     
 }
-

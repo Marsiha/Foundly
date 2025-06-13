@@ -1,0 +1,79 @@
+//
+//  ConversationTableViewCell.swift
+//  Foundly
+//
+//  Created by mars uzhanov on 06.05.2025.
+//
+
+import UIKit
+
+class ConversationTableViewCell: UITableViewCell {
+    
+    static let identifier = "ConversationTableViewCell"
+    
+    private let userImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 21, weight: .semibold)
+        label.textColor = .black
+        return label
+    }()
+    
+    private let userMessageLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 19, weight: .regular)
+        label.textColor = .black
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(userImageView)
+        contentView.addSubview(userNameLabel)
+        contentView.addSubview(userMessageLabel)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        userImageView.frame = CGRect(
+            x: 10,
+            y: 10,
+            width: 100,
+            height: 100
+        )
+        
+        userNameLabel.frame = CGRect(
+            x: userImageView.frame.maxX + 10,
+            y: 10,
+            width: contentView.frame.width - 20 - userImageView.frame.width,
+            height: (contentView.frame.height - 20)/2
+        )
+        
+        userMessageLabel.frame = CGRect(
+            x: userImageView.frame.maxX + 10,
+            y: userNameLabel.frame.maxY + 10,
+            width: contentView.frame.width - 20 - userImageView.frame.width,
+            height: (contentView.frame.height - 20)/2
+        )
+    }
+    
+    public func configure(with model: Conversation) {
+        self.userMessageLabel.text = model.latestMessage.text
+        self.userNameLabel.text = model.name
+        self.userImageView.image = UIImage(systemName: "person.circle")
+    }
+
+}

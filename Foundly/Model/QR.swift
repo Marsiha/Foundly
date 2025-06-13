@@ -1,29 +1,22 @@
+//
+//  QR.swift
+//  
+//
+//  Created by mars uzhanov on 20.03.2025.
+//
+
 import Foundation
 
-struct User: Codable {
-    
-    let username: String
-    let email: String
+struct QR: Codable {
     let firstName: String
     let lastName: String
     let phoneNumber: String
     let profilePicture: String?
-    let qrCode: String?
-    let birthday: String?
-    
     
     enum CodingKeys: String, CodingKey {
-        
-        case username
-        case email
         case firstName = "first_name"
         case lastName = "last_name"
         case phoneNumber = "phone_number"
-        case birthday
         case profilePicture = "profile_picture"
-        case qrCode = "qr_code"
-        
     }
-    
 }
-
