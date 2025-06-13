@@ -5,7 +5,7 @@ import SnapKit
 class MapViewController: UIViewController, UISearchResultsUpdating {
     
     var locationManager: CLLocationManager?
-    private var items: [Item] = []
+    private var items: [MapItem] = []
     
     private let locationButton = UIButton(type: .system)
     
@@ -166,7 +166,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating {
     private func fetchAndDisplayItems() {
         AuthService.shared.fetchItemData { items, error in
             if let items = items {
-                self.items = items // ✅ Store items locally
+                self.items = items
                 DispatchQueue.main.async {
                     self.addItemsToMap(items: items)
                 }
@@ -177,7 +177,7 @@ class MapViewController: UIViewController, UISearchResultsUpdating {
     }
     
     
-    private func addItemsToMap(items: [Item]) {
+    private func addItemsToMap(items: [MapItem]) {
         mapView.removeAnnotations(mapView.annotations)
         
         for item in items {

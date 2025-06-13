@@ -41,13 +41,14 @@ class ConversationsViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(noConversationsLabel)
         setupTableView()
-        fetchConversaions()
         startListeningForConversations()
+        setupTitle()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        noConversationsLabel.frame = CGRect(x: 10, y: (view.frame.height - 100) / 2, width: view.frame.width - 20, height: 100)
     }
     
     private func setupTableView() {
@@ -55,8 +56,16 @@ class ConversationsViewController: UIViewController {
         tableView.delegate = self
     }
     
-    private func fetchConversaions() {
-        tableView.isHidden = false
+    private func setupTitle() {
+        navigationItem.title = "FOUNDLY"
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .foundlyPrimaryDark
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
     }
     
     private func startListeningForConversations() {
@@ -70,14 +79,13 @@ class ConversationsViewController: UIViewController {
             switch result {
             case .success(let conversations):
                 
-                guard !conversations.isEmpty else {
-                    return
-                }
-                
-                self?.conversations = conversations
-                print(conversations)
-                
-                DispatchQueue.main.async {
+                if conversations.isEmpty {
+                    self?.tableView.isHidden = true
+                    self?.noConversationsLabel.isHidden = false
+                } else {
+                    self?.tableView.isHidden = false
+                    self?.noConversationsLabel.isHidden = true
+                    self?.conversations = conversations
                     self?.tableView.reloadData()
                 }
                 
@@ -103,6 +111,10 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
+        openConversation(model)
+    }
+    
+    func openConversation( _ model: Conversation) {
         let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
@@ -111,5 +123,24 @@ extension ConversationsViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         120
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let conversationId = conversations[indexPath.row].id
+            tableView.beginUpdates()
+            self.conversations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { success in
+                if !success {
+                    print("failed delete conversation")
+                }
+            }
+            tableView.endUpdates()
+        }
     }
 }

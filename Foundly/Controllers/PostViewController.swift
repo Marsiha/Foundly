@@ -6,8 +6,6 @@ class PostViewController: UIViewController {
     private let spinner = JGProgressHUD(style: .dark)
     
     let itemType = ["lost_item", "found_item"]
-    let url: URL = URL(string: "https://foundly.kz/item/create/")!
-    let boundary: String = "Boundary-\(UUID().uuidString)"
     var imageArray: [UIImage] = []
     
     private let scrollView: UIScrollView = {
@@ -183,7 +181,7 @@ class PostViewController: UIViewController {
             address: addressView.getAddress(),
             status: "active",
             email: UserDefaults.standard.string(forKey: "email")!,
-            date: "2024-02-25T14:30:00Z",
+            date: formatDate(),
             phoneNumber: phoneNumberView.getPhoneNumber(),
             category: UUID(
                 uuidString: categoryView.getCagetoryIDs(index: 0)
@@ -195,46 +193,43 @@ class PostViewController: UIViewController {
                 uuidString: categoryView.getCagetoryIDs(index: 2)
             )!
         )
-        print("Items:\(newItem)")
         
-        let requestBody = self.multipartFormDataBody(self.boundary, newItem, imageArray)
-        let request = self.generateRequest(httpBody: requestBody)
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("❌ Error: \(error.localizedDescription)")
-                return
-            }
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                if (200...299).contains(httpResponse.statusCode) {
-                    print("✅ Upload successful! Status code: \(httpResponse.statusCode)")
-                    if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                        print("📝 Response: \(responseString)")
-                    }
-                    self.clearAll()
-                    DispatchQueue.main.async {
-                        UIView.animate(withDuration: 0.1, animations: {
-                            self.spinner.textLabel.text = "Success"
-                            self.spinner.detailTextLabel.text = nil
-                            self.spinner.indicatorView = JGProgressHUDSuccessIndicatorView()
-                        })
-                        
-                        self.spinner.dismiss(afterDelay: 1.0)
-                        
-                    }
-                } else {
-                    print("❌ Upload failed. Status code: \(httpResponse.statusCode)")
+        PostService.shared.postItemData(item: newItem, imageArray: imageArray) { [weak self] success in
+            if success {
+                self?.clearAll()
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.1, animations: {
+                        self?.spinner.textLabel.text = "Success"
+                        self?.spinner.detailTextLabel.text = nil
+                        self?.spinner.indicatorView = JGProgressHUDSuccessIndicatorView()
+                    })
                     
-                    if let data = data, let errorMessage = String(data: data, encoding: .utf8) {
-                        print("💥 Error message: \(errorMessage)")
-                    }
-                    DispatchQueue.main.async {
-                        self.spinner.dismiss(animated: true)
-                    }
+                    self?.spinner.dismiss(afterDelay: 1.0)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.1, animations: {
+                        self?.spinner.textLabel.text = "Failed"
+                        self?.spinner.detailTextLabel.text = nil
+                        self?.spinner.indicatorView = JGProgressHUDErrorIndicatorView()
+                    })
+                    
+                    self?.spinner.dismiss(afterDelay: 1.0)
                 }
             }
-        }.resume()
+        }
+       
+    }
+    
+    func formatDate() -> String {
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX" // Handles timezone offset
+        formatter.timeZone = TimeZone.current
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+
+        let isoDateString = formatter.string(from: date)
+        return isoDateString
     }
     
     private func clearAll() {
@@ -250,97 +245,6 @@ class PostViewController: UIViewController {
             self.scrollView.setContentOffset(.zero, animated: true)
         }
     }
-    
-    
-    private func generateRequest(httpBody: Data) -> URLRequest {
-        var request = URLRequest(url: self.url)
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        request.setValue("multipart/form-data; boundary=" + self.boundary, forHTTPHeaderField: "Content-Type")
-        if let token = UserDefaults.standard.string(forKey: "accessToken") {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        
-        return request
-    }
-    
-    private func multipartFormDataBody(_ boundary: String, _ item: Item, _ images: [UIImage]) -> Data {
-        let lineBreak = "\r\n"
-        var body = Data()
-        
-        // ✅ Append individual fields
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"title\"\(lineBreak + lineBreak)")
-        body.append("\((item.title ?? "") + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"item_type\"\(lineBreak + lineBreak)")
-        body.append("\(item.itemType + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"description\"\(lineBreak + lineBreak)")
-        body.append("\(item.description + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"latitude\"\(lineBreak + lineBreak)")
-        body.append("\(item.latitude)\(lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"longitude\"\(lineBreak + lineBreak)")
-        body.append("\(item.longitude)\(lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"address\"\(lineBreak + lineBreak)")
-        body.append("\(item.address + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"status\"\(lineBreak + lineBreak)")
-        body.append("\(item.status + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"email\"\(lineBreak + lineBreak)")
-        body.append("\(item.email + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"date\"\(lineBreak + lineBreak)")
-        body.append("\(item.date + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"phone_number\"\(lineBreak + lineBreak)")
-        body.append("\(item.phoneNumber + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"category\"\(lineBreak + lineBreak)")
-        body.append("\(item.category.uuidString + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"subcategory\"\(lineBreak + lineBreak)")
-        body.append("\(item.subcategory.uuidString + lineBreak)")
-        
-        body.append("--\(boundary + lineBreak)")
-        body.append("Content-Disposition: form-data; name=\"subsubcategory\"\(lineBreak + lineBreak)")
-        body.append("\(item.subsubcategory.uuidString + lineBreak)")
-        
-        // ✅ Append image data
-        for (index, image) in images.enumerated() {
-            if let imageData = image.jpegData(compressionQuality: 0.99) {
-                let fileName = "image_\(index).jpg"
-                
-                body.append("--\(boundary + lineBreak)")
-                body.append("Content-Disposition: form-data; name=\"photos\"; filename=\"\(fileName)\"\(lineBreak)")
-                body.append("Content-Type: image/jpeg\(lineBreak + lineBreak)")
-                body.append(imageData)
-                body.append(lineBreak)
-            }
-        }
-        
-        // ✅ Close boundary
-        body.append("--\(boundary)--\(lineBreak)")
-        
-        return body
-    }
-    
-    
     
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {

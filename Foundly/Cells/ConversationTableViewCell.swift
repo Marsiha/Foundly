@@ -33,12 +33,20 @@ class ConversationTableViewCell: UITableViewCell {
         label.textColor = .black
         return label
     }()
+    
+    private let messageDateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.textColor = .black
+        return label
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(userImageView)
         contentView.addSubview(userNameLabel)
         contentView.addSubview(userMessageLabel)
+        contentView.addSubview(messageDateLabel)
     }
     
     required init?(coder: NSCoder) {
@@ -57,14 +65,21 @@ class ConversationTableViewCell: UITableViewCell {
         
         userNameLabel.frame = CGRect(
             x: userImageView.frame.maxX + 10,
-            y: 10,
+            y: 20,
             width: contentView.frame.width - 20 - userImageView.frame.width,
             height: (contentView.frame.height - 20)/2
         )
         
         userMessageLabel.frame = CGRect(
             x: userImageView.frame.maxX + 10,
-            y: userNameLabel.frame.maxY + 10,
+            y: userNameLabel.frame.maxY - 10,
+            width: contentView.frame.width - 20 - userImageView.frame.width,
+            height: (contentView.frame.height - 40)/2
+        )
+        
+        messageDateLabel.frame = CGRect(
+            x: contentView.frame.width - 60,
+            y: (contentView.frame.maxY / 2) - 20,
             width: contentView.frame.width - 20 - userImageView.frame.width,
             height: (contentView.frame.height - 20)/2
         )
@@ -74,6 +89,29 @@ class ConversationTableViewCell: UITableViewCell {
         self.userMessageLabel.text = model.latestMessage.text
         self.userNameLabel.text = model.name
         self.userImageView.image = UIImage(systemName: "person.circle")
+        self.userImageView.tintColor = .gray
+        self.messageDateLabel.text = stringData(date: model.latestMessage.date)
+    }
+    
+    private func stringData(date: String) -> String {
+        let input = date
+
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "d MMM yyyy 'at' HH:mm:ss 'GMT'Z"
+        inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+        if let date = inputFormatter.date(from: input) {
+            let outputFormatter = DateFormatter()
+            outputFormatter.dateFormat = "HH:mm"
+            outputFormatter.locale = Locale(identifier: "en_US_POSIX")
+            outputFormatter.timeZone = TimeZone(secondsFromGMT: 5 * 3600) // GMT+5
+
+            let timeOnly = outputFormatter.string(from: date)
+            return timeOnly
+        } else {
+            return "asdjf;a"
+        }
+
     }
 
 }

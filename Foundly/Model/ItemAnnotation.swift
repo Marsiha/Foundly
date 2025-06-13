@@ -9,6 +9,6 @@ import Foundation
 import MapKit
 
 class ItemAnnotation: MKPointAnnotation {
-    var item: Item?
+    var item: MapItem?
 }
 

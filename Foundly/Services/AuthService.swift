@@ -417,7 +417,7 @@ class AuthService {
         task.resume()
     }
     
-    public func fetchItemData(completion: @escaping ([Item]?, Error?) -> Void) {
+    public func fetchItemData(completion: @escaping ([MapItem]?, Error?) -> Void) {
         guard let url = URL(string: "\(baseURL)/item/map/") else {
             completion(nil, NSError(domain: "URLError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
             return
@@ -440,7 +440,7 @@ class AuthService {
             if let data = data {
                 print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
                 do {
-                    let itemResponse = try JSONDecoder().decode(ItemResponse.self, from: data)
+                    let itemResponse = try JSONDecoder().decode(MapItemResponse.self, from: data)
                     print("Decoded items: \(itemResponse.items)")
                     completion(itemResponse.items, nil)
                 } catch {

@@ -2,7 +2,7 @@ import UIKit
 
 class ItemDetailView: UIView {
     
-    public var item: Item?
+    public var item: MapItem?
     
     private weak var parentViewController: UIViewController?
     
@@ -83,7 +83,7 @@ class ItemDetailView: UIView {
         parentViewController?.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func configure(with item: Item, parentViewContreller: UIViewController?) {
+    func configure(with item: MapItem, parentViewContreller: UIViewController?) {
         self.parentViewController = parentViewContreller
         self.item = item
         titleLabel.text = item.title

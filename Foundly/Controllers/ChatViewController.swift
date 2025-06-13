@@ -8,6 +8,7 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
+import IQKeyboardManagerSwift
 
 struct Message: MessageType {
     public var sender: MessageKit.SenderType
@@ -60,7 +61,7 @@ class ChatViewController: MessagesViewController {
     }()
     
     public let otherUserEmail: String
-    private let conversationId: String?
+    private var conversationId: String?
     public var isNewConversation = false
     
     private var messages = [Message]()
@@ -93,15 +94,54 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        navigationController?.navigationBar.isTranslucent = false
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
         
-        
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
+        setupInputButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        messageInputBar.inputTextView.becomeFirstResponder()
+        IQKeyboardManager.shared.isEnabled = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        IQKeyboardManager.shared.isEnabled = true
+    }
+    
+    private func setupInputButton() {
+        let button = InputBarButtonItem()
+        button.setSize(CGSize(width: 35, height: 35), animated: false)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.onTouchUpInside { [weak self] _ in
+            self?.presentInputActionSheet()
+        }
+        messageInputBar.setLeftStackViewWidthConstant(to: 36, animated: false)
+        messageInputBar.setStackViewItems([button], forStack: .left, animated: false)
+        messageInputBar.inputTextView.placeholder = "Сообщение"
+    }
+    
+    private func presentInputActionSheet() {
+        let actionSheet = UIAlertController(title: "Add Contact", message: "what", preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Photo", style: .default, handler: { _ in
+            
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Video", style: .default, handler: { _ in
+            
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Photo", style: .default, handler: { _ in
+            
+        }))
     }
     
     private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
@@ -128,17 +168,11 @@ class ChatViewController: MessagesViewController {
             }
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        messageInputBar.inputTextView.becomeFirstResponder()
-    }
-
 }
 
 extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        print("hello")
+        messageInputBar.inputTextView.text = ""
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
             let selfSender = self.selfSender,
             let messageId = createMessageId() else {
@@ -157,6 +191,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 if success {
                     print("message send")
                     self?.isNewConversation = false
+                    let newConversationId = "conversation_\(message.messageId)"
+                    self?.conversationId = newConversationId
+                    self?.listenForMessages(id: newConversationId, shouldScrollToBottom: true)
                 } else {
                     print("message not send")
                 }
@@ -195,7 +232,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         if let sender = selfSender {
             return sender
         }
-        
         fatalError("Self sender is nil, email should be cached")
         
     }
@@ -208,5 +244,12 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         return messages.count
     }
     
+    func backgroundColor(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId {
+            return .foundlySecondary.withAlphaComponent(0.7)
+        }
+        return .secondarySystemBackground
+    }
   
 }

@@ -53,6 +53,8 @@
 		F684E4D12D9E1B71002D0517 /* HistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F684E4D02D9E1B71002D0517 /* HistoryService.swift */; };
 		F684E4D32D9E1C56002D0517 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = F684E4D22D9E1C56002D0517 /* History.swift */; };
 		F684E4D52D9E1F7E002D0517 /* HistoryItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F684E4D42D9E1F7E002D0517 /* HistoryItemTableViewCell.swift */; };
+		F68C6AB22DCC15B000E28DA5 /* MapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68C6AB12DCC15B000E28DA5 /* MapItem.swift */; };
+		F68C6AB82DCC628300E28DA5 /* TermServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68C6AB72DCC628300E28DA5 /* TermServiceViewController.swift */; };
 		F68F37BC2D65F35A0024624B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F37BB2D65F35A0024624B /* User.swift */; };
 		F68F37BE2D65F3920024624B /* RegisterUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F37BD2D65F3920024624B /* RegisterUserRequest.swift */; };
 		F68F37C02D665B240024624B /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68F37BF2D665B240024624B /* Colors.swift */; };
@@ -134,6 +136,8 @@
 		F684E4D02D9E1B71002D0517 /* HistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryService.swift; sourceTree = "<group>"; };
 		F684E4D22D9E1C56002D0517 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		F684E4D42D9E1F7E002D0517 /* HistoryItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryItemTableViewCell.swift; sourceTree = "<group>"; };
+		F68C6AB12DCC15B000E28DA5 /* MapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItem.swift; sourceTree = "<group>"; };
+		F68C6AB72DCC628300E28DA5 /* TermServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermServiceViewController.swift; sourceTree = "<group>"; };
 		F68F37BB2D65F35A0024624B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F68F37BD2D65F3920024624B /* RegisterUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserRequest.swift; sourceTree = "<group>"; };
 		F68F37BF2D665B240024624B /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 				F6CFF45B2D96301A00682293 /* Profile.swift */,
 				F6CFF4612D97208500682293 /* ChangePassword.swift */,
 				F684E4D22D9E1C56002D0517 /* History.swift */,
+				F68C6AB12DCC15B000E28DA5 /* MapItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -297,6 +302,7 @@
 				F647DE732DC6613B006909DB /* ConverstionsViewController.swift */,
 				F647DE752DC66147006909DB /* ChatViewController.swift */,
 				F647DE772DC78788006909DB /* DetailViewController.swift */,
+				F68C6AB72DCC628300E28DA5 /* TermServiceViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -510,6 +516,7 @@
 				F6AE37F52D62511A00D51368 /* AppDelegate.swift in Sources */,
 				F653C7082D65EEFE00F00C77 /* HistoryViewController.swift in Sources */,
 				F653C6FD2D63B93C00F00C77 /* RegisterViewController.swift in Sources */,
+				F68C6AB82DCC628300E28DA5 /* TermServiceViewController.swift in Sources */,
 				F653C6F92D63B8E900F00C77 /* CustomButton.swift in Sources */,
 				F68F37BC2D65F35A0024624B /* User.swift in Sources */,
 				F647DE742DC6613B006909DB /* ConverstionsViewController.swift in Sources */,
@@ -532,6 +539,7 @@
 				F69C6B372D7FDFA40038220D /* ItemAnnotation.swift in Sources */,
 				F62E55402D8BA88D00E5B091 /* QRCodeScannerViewController.swift in Sources */,
 				F6AE37F72D62511A00D51368 /* MapViewController.swift in Sources */,
+				F68C6AB22DCC15B000E28DA5 /* MapItem.swift in Sources */,
 				F682AC562D7DD880008692B1 /* Data+Extension.swift in Sources */,
 				F6CFF45C2D96301A00682293 /* Profile.swift in Sources */,
 				F653C6FF2D63B99500F00C77 /* AlertManager.swift in Sources */,

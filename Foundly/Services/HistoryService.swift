@@ -14,7 +14,7 @@ class HistoryService {
     
     private let baseURL = "https://foundly.kz"
     
-    func fetchHistoryData(completion: @escaping (Result<[HistoryItem], Error>) -> Void) {
+    func fetchHistoryData(completion: @escaping (Result<[MapItem], Error>) -> Void) {
         guard let token = UserDefaults.standard.string(forKey: "accessToken") else {
             completion(.failure(NSError(domain: "AuthError", code: 401, userInfo: [NSLocalizedDescriptionKey: "No access token available"])))
             return
@@ -42,7 +42,7 @@ class HistoryService {
             guard let data = data else { return }
             
             do {
-                let decodedData = try JSONDecoder().decode([HistoryItem].self, from: data)
+                let decodedData = try JSONDecoder().decode([MapItem].self, from: data)
                 DispatchQueue.main.async {
                     completion(.success(decodedData))
                 }

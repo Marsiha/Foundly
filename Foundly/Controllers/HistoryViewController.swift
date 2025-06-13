@@ -13,8 +13,8 @@ class HistoryViewController: UIViewController {
     private let tableView = UITableView()
     
     private var selectedFilter: FilterType = .lost
-    private var historyItems = [HistoryItem]()
-    private var allHistoryItems = [HistoryItem]()
+    private var historyItems = [MapItem]()
+    private var allHistoryItems = [MapItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +110,7 @@ class HistoryViewController: UIViewController {
         tableView.delegate = self
         tableView.register(HistoryItemTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = false
         view.addSubview(tableView)
         
@@ -129,7 +130,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! HistoryItemTableViewCell
         let item = historyItems[indexPath.row]
-        cell.configure(title: item.title, location: item.address, status: item.status, type: item.itemType, time: item.date, description: item.description)
+        cell.configure(item: item, parentContreller: self)
         return cell
     }
     

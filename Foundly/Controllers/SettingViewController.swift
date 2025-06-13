@@ -101,10 +101,21 @@ class SettingViewController: UIViewController {
                 self.navigationController?.pushViewController(vc, animated: true)
             }),
             .staticCell(model: SettingOptions(title: "Help", icon: UIImage(systemName: "ellipsis.message")) {
+                let email = "daianabatyrkhan_04@icloud.com"
+                let subject = "Help to use "
+                let body = "Hello, I have a question about the ..."
                 
+                if let url = URL(string: "mailto:\(email)?subject=\(subject)&body=\(body)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") {
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    } else {
+                        AlertManager.showUnknownFetchingUserError(on: self)
+                    }
+                }
             }),
             .staticCell(model: SettingOptions(title: "Term service", icon: UIImage(systemName: "shield")) {
-                
+                let vc = TermServiceViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
             })
         ]))
         
@@ -123,7 +134,7 @@ class SettingViewController: UIViewController {
                         }
                     }
                 }
-            
+                
                 do {
                     try Auth.auth().signOut()
                 } catch {
